@@ -1,0 +1,128 @@
+1、图片长*图片宽*手机屏幕密度[inTargetDensity]/目标资源密度[图片所在资源文件夹的密度]*每一个像素所占资源大小
+
+2、startActivity -- > instrutation辅助类操作，执行execStartActivity  操作IApplicationThread【实现类为ApplicationThread，
+		这个类为ActivityThread的内部类】执行启动activity,
+		然后通过ActivityManager[实际上ActivityManagerNative.getDefault()-- getDefault返回的其实是一个接口IActivityManager接口,
+		【新的系统源码通过ActivityManager.getService去获取IActivityManager，其实获取的获取是一个进程间通信的原理。通过IBinder实现】
+		最终通过代理ActivityManagerProxy类去执行startActivity方法]
+		启动activity   并通过checkStartActivityResult()方法，检查启动的结果，最终经由performLunchActivity方法，通过类加载器
+		来完成类的加载与启动
+		
+		
+		
+3、Parcelable 、Serializable 作用、效率、区别
+
+   Serializable的作用是为了保存对象的属性到本地文件、数据库、网络流、rmi以及方便数据传输，
+   当然这种传输可以是程序内的，也可以是连个程序间的。二Android的Parcelable的设计初衷
+   是因为Serializable 效率过慢，为了程序间不同组件间以及不同Android程序间(AIDL)高效
+   的传输数据而设计，这些数据仅在内存中存在，Parcelable是通过IBINDER通信的消息的载体.
+   
+   
+4、Binder 的C/S架构
+
+  client想要得到某一个Service的实例时，实际上就是通过ServiceManager获得具体的Service【引用】，然后通过这个
+  引用去调用服务端具体的某个方法。
+  
+  解析：服务端跨进程的类都需要继承Binder类，client所持有的Service类并不是真实的服务类，设备驱动会根据我们的引用
+  对象去找到相对应的远程进程，客户端要调用远程对象函数时，只需把数据写入到Parcel，在调用所持有的Binder引用的transact()函数【这时候当前线程会挂起】，
+  transact函数执行过程中会把参数、标识符（标记远程对象及其函数）等数据放入到Client的共享内存，
+  Binder驱动从Client的共享内存中读取数据，根据这些数据找到对应的远程进程的共享内存，把数据拷贝到远程进程的共享内存中，并通知远程进程执行onTransact()函数，
+  这个函数也是属于Binder类。远程进程Binder对象执行完成后，将得到的写入自己的共享内存中，Binder驱动再将远程进程的共享内存数据拷贝到客户端的共享内存，并唤醒客户端线程。
+
+  如果处理多并发、RPC场景下一般使用Binder线程池去管理,不过需要注意多线程同步的情况
+  
+  
+ 5、获取View测量后的宽高的几种方式：
+    1、Activity/View#onWindowFocusChanged
+	2、view.post(runnable) 通过post可以将一个runnable投递到消息队列的尾部，然后等待Looper调用次runnable的时候，View也已经初始化好了'
+	3、ViewTreeObserver [OnGlobalLayoutListener]
+	         ViewTreeObserver observer = view.getViewTreeObserver();
+			 oberver.addOnGlobalLayoutListener(new OnGlobalLayoutListener(){
+			   
+			    @Override
+				public void onGlobalLayout(){
+				
+				  view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				  int width = view.getMeasureedWidth();
+				  int height = view.getMeasureHeight();
+				 
+				 }
+			 
+			   });
+	
+	
+6、ThreadLocal工作原理【和线程绑定】
+       ThreadLocal是一个线程内部的数据存储类，通过它可以在制定的线程中存储数据，数据存储以后，只有在指定线程
+       中可以获取到存储的数据,对于其他线程来说则无法获取到数据	  
+	
+	
+	
+7、消息队列的工作原理
+       
+        MessageQueue：主要包含两个操作：插入和读取	，对应的方法分别为enqueueMessage和next,其中enqueueMessage
+        的作用是往消息队列中插入一条消息，而next则是从消息队列中取出并从消息队列中移除。尽管MessageQueue叫消息队列，其实内部实现
+        并不是用的队列，实际上它是通过单链表的数据结构来维护消息列表中的数据,单链表在插入和删除方面比较有优势		
+	
+	
+8、Thread、Handler和HandlerThread 之间的关联以及区别
+        【一个线程如果需要处理消息，那么它必须拥有自己的Looper】
+
+         Handler一般是用来异步更新UI的,通俗的说是线程间通信，不过Handler一般创建的时候是在主线程中，如果是针对子线程与子线程间通信，使用Thread，就必须
+         需要创建对应的Looper，与当前线程绑定。而HandlerThead已经帮你创建好了。对应创建的Handler构造方法中，可以直接取HandlerThread对应的Looper。		
+
+
+
+9、Fragment碎片懒加载问题
+
+          1、onHiddenChanged	标示当前Fragment对用户是否可见。这种方式是基于用户自己控制Fragment显示与隐藏【show、hide】	 
+	      2、setUserVisibleHint 与viewPager结合，但是存在一个问题，由于FragmentPagerAdapter存在缓存问题，如果当前显示的Fragment还是上一次的
+		     Fragment，那么就不会触发这个·方法【包含Activity切换】，只有在viewPager切换时触发,setPrimaryItem 这时setUserVisibleHint会被设置为true
+	
+9、AsyncTask
+
+        1、AsyncTask的对象必须在主线程中创建
+		2、exxecute方法必须在UI线程调用
+        3、一个AsyncTask对象只能执行一次，即只能调用一次execute方法，否则会报运行时异常	
+	    4、Android1.6之前，是串行执行任务的，Android1.6之后开始采用线程池处理并行任务，3.0之后，为了避免AsyncTask所带来的并发错误
+		，AsyncTask又采用了一个线程来串行执行任务。
+	
+	
+	
+	
+	
+	
+	
+	
+10、Android开发之SOLID原则  https://www.aliyun.com/jiaocheng/26601.html、https://www.aliyun.com/jiaocheng/3900.html?spm=5176.100033.1.25.oFpyNo
+         
+			SOLID是用来帮助定义面向对象设计的五个基本原则的助记符
+                   1、单一功能原则[SRP] 一个类在修改时应该有、也只有一个理由【一个类中应该是一组相关性很高的函数和数据的封装】
+				         理解：具体的方法、函数应该只有一种用途，而不是在其中添加其他功能性逻辑。比如onBinderViewHolder
+						        中，只作为给view绘制内容，但是如果添加了其他计算功能逻辑，那么其实就是违反了这一规则，可以
+								把这一计算逻辑单独拎出来单独计算，其实就是为了代码可扩展性。
+								【其实就是根据 逻辑、功能分离相关代码】
+                   2、开闭原则[OCP] 软件实体（类、模块、函数等等）应该对外扩展开放，但是对修改封闭
+				         理解：针对一些公开的方法指在多个场景下使用，不应该只在某一个函数下处理，比如一些核心的逻辑，在
+						       不影响其原本的逻辑情况下，只是添加对应的功能，那么就可以通过接口的形式把相关功能对外开放
+							   出来，即不影响核心的模块，保证了稳定性，也使代码可扩展性提高
+                   3、里氏替换规则[LSP] 子类不允许破坏父类的类型定义
+				   4、接口分离原则[ISP] 客户端不应该依赖于一些它不需要的方法.
+				   5、依赖反转原则[DIP] 1> 上层的模块不应该依赖于底层的模块。他们都因该依赖于抽象
+										2> 抽象不取决于具体的实现，具体的实现取决于抽象
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

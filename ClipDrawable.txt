@@ -1,0 +1,40 @@
+一、语法
+
+<?xml version="1.0" encoding="utf-8"?>
+<clip
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/drawable_resource"
+    android:clipOrientation=["horizontal" | "vertical"]
+    android:gravity=["top" | "bottom" | "left" | "right" | "center_vertical" |
+                     "fill_vertical" | "center_horizontal" | "fill_horizontal" |
+                     "center" | "fill" | "clip_vertical" | "clip_horizontal"] />
+					 
+主要关注两个节点，一个android:clipOrientation只有垂直和水平可选
+android:gravity可选的就多啦
+
+选项				作用
+top	    			将内部的Drawable放在容器的顶部，不改变它的大小，如果为竖直裁剪，那么从底部开始裁剪
+bottom				将内部的Drawable放在容器的底部，不改变它的大小，如果为竖直裁剪，那么从顶部开始裁剪
+left				将内部的Drawable放在容器的左部，不改变它的大小，如果为水平裁剪，那么从右边开始裁剪，这就是默认值
+right				将内部的Drawable放在容器的右部，不改变它的大小，如果为水平裁剪，那么从左边开始裁剪
+center_vertica l    内部的Drawable在垂直方向上填充容器，如果是垂直裁剪，那么仅当ClipDrawable等级为0的时候，才能有裁剪行为
+center_horizontal	使内部的Drawable在容器中水平居中，不改变它的大小，如果为水平裁剪，那么仅当ClipDrawable的等级为0时，才能有裁剪行为
+center	            是内部的Drawable在容器中水平和竖直方向都居中，不改变大小，如果为处置裁剪，那么从上下同时开始裁剪；如果为水平裁剪，那么左右同时开始裁剪
+fill	            使内部的Drawable在水平和垂直方向上同时填充容器，仅当ClipDrawable的等级为0时，才能有裁剪行为
+clip_vertocal	    附加选项，表示垂直方向的裁剪，较少使用
+clip_horizoltal	    附加选项，表示水平方向的裁剪，较少使用
+二、demo
+
+clipdrawable_simple.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<clip xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@mipmap/star"
+    android:clipOrientation="horizontal"
+    android:gravity="bottom">
+</clip>
+
+作者：阿敏其人
+链接：http://www.jianshu.com/p/9e3a021288f9
+來源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

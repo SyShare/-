@@ -1,0 +1,5 @@
+事件穿透问题 : onViewCreated  view.setClicked(true);
+
+
+replace(R.id.contont,fragment);
+实际上还是在view的基础上attach的，所以事件还会往上传递

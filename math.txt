@@ -1,0 +1,56 @@
+Math.PI   返回记录的圆周率
+
+Math.E  返回记录e的常量
+
+Math.abs 返回绝对值
+
+Math.sin 返回正弦函数 Math.asin 反正弦函数
+
+Math.cos 返回余弦函数 Math.acos 反余弦函数
+
+Math.tan  返回正切函数 Math.atan 反正切函数&nbsp;Math.atan2 商的反正切函数
+
+Math.toDegrees 返回 弧度转化为角度 Math.toRadians 角度转化为弧度
+
+Math.ceil 返回不小于某数的最大整数
+例如
+Math.ceil（10.2） = 11；
+Math.ceil（-10.2） = -10；
+
+Math.floor 返回不大于某数的最大整数
+例如
+Math.floor(10.2) = 10；
+Math.floor(-10.2) = -11；
+Math.exp 返回e的任意次方
+
+Math.log10 返回以10为底的对数
+
+Math.log 返回自然对数
+
+Math.rint 返回距离某数最近的整数
+例如：
+Math.rint(10.5) = 10.0;
+Math.rint(10.4) = 10.0;
+Math.rint(10.6) = 11.0;
+
+Math.round 四舍五入 返回int型或者long型（上一个函数返回double型）
+
+Math.random 返回0，1之间的一个随机数
+
+Math.IEEEremainder(x,y) 返x%y的值
+
+Math.max 返回两数中最大
+
+Math.min 返回两数中最小
+
+Math.sqrt 返回开方
+
+Math.pow 返回某数的任意次方
+Math.sqrt(x)：返回平方根
+Math.pow(x,y)：返回x的y次方
+Math.nextDown(X)比X小0.00001
+Math.nextUp(X)比X大0.00001
+Math.addExact(1, 2); 加法运算
+Math.subtractExact(3, 5);减法运算
+Math.multiplyExact(2, 4); 乘法运算
+Math.scalb(6, 3); 表示6 * （2的3次方）

@@ -1,0 +1,34 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 灰色阴影 -->
+    <item
+        android:left="2dp"
+        android:top="4dp">
+        <shape>
+            <solid android:color="@android:color/darker_gray" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <!-- 白色前景 -->
+    <item
+        android:bottom="4dp"
+        android:right="2dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</layer-list>
+
+
+属性解释：
+
+		android:top 顶部的偏移量
+		android:bottom 底部的偏移量
+		android:left 左边的偏移量
+		android:right 右边的偏移量
+		
+		
+关于item的用法，也做下总结：
+							根节点不同时，可设置的属性是会不同的，比如selector下，可以设置一些状态属性，而在layer-list下，可以设置偏移量；
+							就算父节点同样是selector，放在drawable目录和放在color目录下可用的属性也会不同，比如drawable目录下可用的属性为android:drawable，在color目录下可用的属性为android:color；
+							item的子节点可以为任何类型的drawable类标签，除了上面例子中的shape、color、layer-list，也可以是selector，还有其他没讲过的bitmap、clip、scale、inset、transition、rotate、animated-rotate、lever-list等等。		
